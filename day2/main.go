@@ -21,23 +21,13 @@ func main() {
 		fmt.Println("Error reading data: ", err)
 	}
 
-	//print first report just to check
-	// fmt.Println(reports[0].Levels)
-	// s1 := checkSafety(reports[0])
-
-	// fmt.Println(s1)
-
-	// tr := &Report{
-	// 	Levels: []int{1, 2, 3, 4},
-	// }
-
-	// s2 := checkSafety(tr)
-
-	// fmt.Println("this should be true: ", s2)
-
 	p1 := checkAllSafety(reports)
 
 	fmt.Println("answer to p1: ", p1)
+
+	//p2
+	p2 := checkAllSafety2(reports)
+	fmt.Println("answer to p2: ", p2)
 }
 
 func readData(path string) ([]*Report, error) {
@@ -126,6 +116,36 @@ func checkAllSafety(reports []*Report) int {
 
 	for i := 0; i < len(reports); i++ {
 		if checkSafety(reports[i]) {
+			s += 1
+		}
+	}
+
+	return s
+}
+
+// part 2 ---------------
+func checkSafety2(report *Report) bool {
+	l := report.Levels
+
+	for i := 0; i < len(l); i++ {
+		l2 := append([]int{}, l[:i]...)
+		l2 = append(l2, l[i+1:]...)
+		r2 := &Report{
+			Levels: l2,
+		}
+		if checkSafety(r2) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func checkAllSafety2(reports []*Report) int {
+	var s = 0
+
+	for i := 0; i < len(reports); i++ {
+		if checkSafety2(reports[i]) || checkSafety(reports[i]) {
 			s += 1
 		}
 	}
