@@ -14,6 +14,12 @@ type Puzzle struct {
 	SecondCol int
 }
 
+type PuzzleCounts struct {
+	Key  int
+	Val  int
+	Mult int
+}
+
 const inp = "day1/input.txt"
 
 func main() {
@@ -34,6 +40,13 @@ func main() {
 	p1 := calcDist(c1, c2)
 
 	fmt.Println(p1)
+
+	//part 2
+	pcs := countMap(c1, c2)
+
+	p2 := sumMults(pcs)
+
+	fmt.Println("Solution to part 2: ", p2)
 
 }
 
@@ -140,3 +153,44 @@ func Abs(x int) int {
 
 	return x
 }
+
+// part 2 stuff -----------
+func countMap(c1 []int, c2 []int) []*PuzzleCounts {
+
+	counts := make(map[int]int)
+
+	for _, v := range c2 {
+		if _, ok := counts[v]; ok {
+			counts[v]++
+		} else {
+			counts[v] = 1
+		}
+	}
+
+	var ps []*PuzzleCounts
+
+	for _, k := range c1 {
+		m := k * counts[k]
+		p := &PuzzleCounts{
+			Key:  k,
+			Val:  counts[k],
+			Mult: m,
+		}
+
+		ps = append(ps, p)
+	}
+
+	return ps
+}
+
+func sumMults(pcs []*PuzzleCounts) int {
+	var s = 0
+
+	for i := 0; i < len(pcs); i++ {
+		s += pcs[i].Mult
+	}
+
+	return s
+}
+
+//RESUME HERE -- SHOULD JUST NEED TO SUM THE MULTS TOMORROW
